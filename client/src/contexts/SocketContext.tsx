@@ -48,11 +48,13 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         newSocket.close();
       };
     } else {
-      if (socket) {
-        socket.close();
-        setSocket(null);
-        setIsConnected(false);
-      }
+      setSocket((prevSocket) => {
+        if (prevSocket) {
+          prevSocket.close();
+          setIsConnected(false);
+        }
+        return null;
+      });
     }
   }, [isAuthenticated, token]);
 

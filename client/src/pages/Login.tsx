@@ -110,9 +110,9 @@ const Login: React.FC = () => {
                 />
                 <span className="ml-2 text-sm text-gray-600">Remember me</span>
               </label>
-              <a href="#" className="text-sm font-medium text-blue-600 hover:text-blue-700">
+              <button type="button" className="text-sm font-medium text-blue-600 hover:text-blue-700">
                 Forgot password?
-              </a>
+              </button>
             </div>
 
             <motion.button

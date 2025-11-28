@@ -43,19 +43,19 @@ const Footer: React.FC = () => {
             <h3 className="font-semibold text-gray-900 mb-4">Community</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">
+                <button type="button" className="text-gray-600 hover:text-gray-900 transition-colors text-left">
                   About
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">
+                <button type="button" className="text-gray-600 hover:text-gray-900 transition-colors text-left">
                   Guidelines
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">
+                <button type="button" className="text-gray-600 hover:text-gray-900 transition-colors text-left">
                   Support
-                </a>
+                </button>
               </li>
             </ul>
           </div>
@@ -64,19 +64,19 @@ const Footer: React.FC = () => {
             <h3 className="font-semibold text-gray-900 mb-4">Legal</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">
+                <button type="button" className="text-gray-600 hover:text-gray-900 transition-colors text-left">
                   Privacy
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">
+                <button type="button" className="text-gray-600 hover:text-gray-900 transition-colors text-left">
                   Terms
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">
+                <button type="button" className="text-gray-600 hover:text-gray-900 transition-colors text-left">
                   Cookies
-                </a>
+                </button>
               </li>
             </ul>
           </div>

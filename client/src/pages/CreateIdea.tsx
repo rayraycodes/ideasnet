@@ -20,7 +20,7 @@ const CreateIdea: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const navigate = useNavigate();
-  const { token, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   React.useEffect(() => {
     if (!isAuthenticated) {
