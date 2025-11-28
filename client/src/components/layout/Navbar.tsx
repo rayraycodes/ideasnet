@@ -19,6 +19,24 @@ const Navbar: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest('.profile-dropdown-container')) {
+        setIsProfileDropdownOpen(false);
+      }
+      if (!target.closest('.mobile-menu-container')) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    if (isProfileDropdownOpen || isMobileMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [isProfileDropdownOpen, isMobileMenuOpen]);
+
   const handleLogout = () => {
     logout();
     navigate('/');
@@ -75,11 +93,11 @@ const Navbar: React.FC = () => {
                 >
                   Create
                 </Link>
-                <div className="relative ml-2">
+                <div className="relative ml-2 profile-dropdown-container">
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    onClick={() => setIsMenuOpen(!isMenuOpen)}
+                    onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
                     className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-white border border-gray-300 hover:bg-gray-50 transition-all duration-200"
                   >
                     <div className="w-8 h-8 bg-gray-900 rounded-full flex items-center justify-center">
@@ -90,7 +108,7 @@ const Navbar: React.FC = () => {
                     <span className="font-medium text-gray-700">{user?.firstName}</span>
                     <svg
                       className={`w-4 h-4 text-gray-600 transition-transform duration-300 ${
-                        isMenuOpen ? 'rotate-180' : ''
+                        isProfileDropdownOpen ? 'rotate-180' : ''
                       }`}
                       fill="none"
                       stroke="currentColor"
@@ -101,19 +119,19 @@ const Navbar: React.FC = () => {
                   </motion.button>
 
                   <AnimatePresence>
-                    {isMenuOpen && (
+                    {isProfileDropdownOpen && (
                       <motion.div
                         initial={{ opacity: 0, y: -10, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: -10, scale: 0.95 }}
                         transition={{ duration: 0.2 }}
-                        className="absolute right-0 mt-2 w-56 bg-white rounded-lg border border-gray-200 shadow-lg"
+                        className="absolute right-0 mt-2 w-56 bg-white rounded-lg border border-gray-200 shadow-lg z-50"
                       >
                         <div className="p-2">
                           <Link
                             to="/profile"
                             className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-50 transition-all duration-200 text-gray-700 font-medium"
-                            onClick={() => setIsMenuOpen(false)}
+                            onClick={() => setIsProfileDropdownOpen(false)}
                           >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -151,14 +169,14 @@ const Navbar: React.FC = () => {
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden">
+          <div className="md:hidden mobile-menu-container">
             <motion.button
               whileTap={{ scale: 0.95 }}
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="p-2 rounded-lg bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                {isMenuOpen ? (
+                {isMobileMenuOpen ? (
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 ) : (
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
@@ -170,7 +188,7 @@ const Navbar: React.FC = () => {
 
         {/* Mobile Navigation */}
         <AnimatePresence>
-          {isMenuOpen && (
+          {isMobileMenuOpen && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
@@ -184,7 +202,7 @@ const Navbar: React.FC = () => {
                   className={`block px-4 py-3 rounded-xl font-medium transition-all ${
                     isActive('/ideas') ? 'bg-blue-50/50 text-blue-600' : 'text-gray-700 hover:bg-white/50'
                   }`}
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Explore Ideas
                 </Link>
@@ -195,14 +213,14 @@ const Navbar: React.FC = () => {
                       className={`block px-4 py-3 rounded-xl font-medium transition-all ${
                         isActive('/create') ? 'bg-blue-50/50 text-blue-600' : 'text-gray-700 hover:bg-white/50'
                       }`}
-                      onClick={() => setIsMenuOpen(false)}
+                      onClick={() => setIsMobileMenuOpen(false)}
                     >
                       Create Idea
                     </Link>
                     <Link
                       to="/profile"
                       className="block px-4 py-3 rounded-xl font-medium text-gray-700 hover:bg-white/50 transition-all"
-                      onClick={() => setIsMenuOpen(false)}
+                      onClick={() => setIsMobileMenuOpen(false)}
                     >
                       Profile
                     </Link>
@@ -218,14 +236,14 @@ const Navbar: React.FC = () => {
                     <Link
                       to="/login"
                       className="block px-4 py-3 rounded-xl font-medium text-gray-700 hover:bg-white/50 transition-all"
-                      onClick={() => setIsMenuOpen(false)}
+                      onClick={() => setIsMobileMenuOpen(false)}
                     >
                       Login
                     </Link>
                     <Link
                       to="/register"
                       className="block btn-primary text-center"
-                      onClick={() => setIsMenuOpen(false)}
+                      onClick={() => setIsMobileMenuOpen(false)}
                     >
                       Sign Up
                     </Link>
