@@ -59,29 +59,41 @@ This guide will walk you through setting up your Ideas.net application on GitHub
    - **Name**: `REACT_APP_SUPABASE_ANON_KEY`
    - **Value**: Your Supabase anon/public key
 
+   **Secret 3:**
+   - **Name**: `REACT_APP_API_URL`
+   - **Value**: Your deployed backend URL (e.g., `https://your-app.railway.app`)
+
 3. **Verify secrets are added:**
-   - You should see both secrets listed in the Secrets section
+   - You should see all three secrets listed in the Secrets section
 
-## Step 4: Configure Supabase for GitHub Pages
+## Step 5: Configure Supabase for GitHub Pages
 
-1. **Update Supabase Redirect URLs:**
+1. **Update Supabase Redirect URLs (if using Supabase Auth):**
    - Go to your Supabase project dashboard
    - Navigate to **Authentication** → **URL Configuration**
-   - Add the following to **Redirect URLs**:
+   - In the **Redirect URLs** field, add each URL on a separate line (one per line):
      ```
      https://rayraycodes.github.io/ideasnet/auth/callback
+     ```
+     ```
      http://localhost:3000/auth/callback
      ```
-   - Add the following to **Site URL**:
+   - **Important:** Add URLs one at a time if the interface requires it, or ensure each URL is on its own line
+   - Set **Site URL** to:
      ```
      https://rayraycodes.github.io/ideasnet
      ```
+   - **Note:** If you get "Please provide a valid URL" error:
+     - Make sure there are no trailing spaces
+     - Ensure the URL starts with `https://` (not `http://` for production)
+     - Try adding URLs one at a time
+     - Verify the URL format matches exactly: `https://rayraycodes.github.io/ideasnet/auth/callback`
 
 2. **Update CORS settings (if needed):**
    - In Supabase, go to **Settings** → **API**
    - Under **CORS**, make sure `https://rayraycodes.github.io` is allowed
 
-## Step 5: Trigger Deployment
+## Step 6: Trigger Deployment
 
 1. **Automatic deployment:**
    - The workflow will automatically run when you push to the `main` branch
@@ -92,7 +104,7 @@ This guide will walk you through setting up your Ideas.net application on GitHub
    - Select **Deploy to GitHub Pages** workflow
    - Click **Run workflow** → **Run workflow**
 
-## Step 6: Verify Deployment
+## Step 7: Verify Deployment
 
 1. **Check deployment status:**
    - Go to **Actions** tab
