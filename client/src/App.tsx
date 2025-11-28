@@ -17,6 +17,7 @@ import CreateIdea from './pages/CreateIdea';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Profile from './pages/Profile';
+import AuthCallback from './pages/AuthCallback';
 import NotFound from './pages/NotFound';
 
 // Create a client
@@ -34,7 +35,13 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <SocketProvider>
-          <Router>
+          <Router
+            basename={process.env.NODE_ENV === 'production' ? '/ideasnet' : ''}
+            future={{
+              v7_startTransition: true,
+              v7_relativeSplatPath: true,
+            }}
+          >
             <div className="min-h-screen bg-gray-50 flex flex-col">
               <Navbar />
               <main className="flex-grow">
@@ -45,6 +52,7 @@ function App() {
                   <Route path="/create" element={<CreateIdea />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/register" element={<Register />} />
+                  <Route path="/auth/callback" element={<AuthCallback />} />
                   <Route path="/profile" element={<Profile />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>

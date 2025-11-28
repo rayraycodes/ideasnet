@@ -1,2 +1,12 @@
 node_modules
 .env
+dist/
+client/build/
+*.log
+.DS_Store
+coverage/
+.vscode/
+.idea/
+*.swp
+*.swo
+*~

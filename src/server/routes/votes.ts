@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { prisma } from '../../utils/database';
 import { authMiddleware } from '../../middleware/auth';
 import { AuthRequest } from '../../types';
+import { logger } from '../../utils/logger';
 
 const router = Router();
 
@@ -48,8 +49,46 @@ router.post('/idea/:ideaId', authMiddleware, async (req: any, res) => {
       });
     }
     return res.json({ message: 'Vote added' });
-  } catch (error) {
-    return res.status(500).json({ error: 'Failed to vote' });
+  } catch (error: any) {
+    logger.error('Failed to vote on idea', {
+      error: error.message,
+      stack: error.stack,
+      code: error.code,
+      ideaId: req.params.ideaId,
+      userId: req.user?.id
+    });
+    return res.status(500).json({ 
+      error: 'Failed to vote',
+      message: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+});
+
+// Get user votes for an idea
+router.get('/idea/:ideaId/user', authMiddleware, async (req: any, res) => {
+  try {
+    const { ideaId } = req.params;
+    const votes = await prisma.vote.findMany({
+      where: {
+        userId: req.user!.id,
+        ideaId,
+      },
+      select: {
+        type: true,
+      },
+    });
+    res.json(votes.map(v => v.type));
+  } catch (error: any) {
+    logger.error('Failed to fetch user votes', {
+      error: error.message,
+      stack: error.stack,
+      ideaId: req.params.ideaId,
+      userId: req.user?.id
+    });
+    res.status(500).json({ 
+      error: 'Failed to fetch user votes',
+      message: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 });
 
@@ -92,8 +131,18 @@ router.delete('/idea/:ideaId', authMiddleware, async (req: any, res) => {
       });
     }
     return res.json({ message: 'Vote removed' });
-  } catch (error) {
-    return res.status(500).json({ error: 'Failed to remove vote' });
+  } catch (error: any) {
+    logger.error('Failed to remove vote', {
+      error: error.message,
+      stack: error.stack,
+      code: error.code,
+      ideaId: req.params.ideaId,
+      userId: req.user?.id
+    });
+    return res.status(500).json({ 
+      error: 'Failed to remove vote',
+      message: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 });
 

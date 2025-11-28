@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { JwtPayload } from '../types';
 
-export const signJWT = (payload: { userId: string }, expiresIn?: string): string => {
+export const signJWT = (payload: { userId: string; role?: string }, expiresIn?: string): string => {
   if (!process.env.JWT_SECRET) {
     throw new Error('JWT_SECRET not configured');
   }

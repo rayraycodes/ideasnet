@@ -46,7 +46,8 @@ model User {
   username      String   @unique
   firstName     String
   lastName      String
-  password      String   // Hashed password
+  password      String?  // Hashed password (optional for OAuth users)
+  googleId      String?  @unique // Google OAuth ID
   bio           String?
   avatar        String?
   role          UserRole @default(ENTHUSIAST)

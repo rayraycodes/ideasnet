@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 
 interface User {
   id: string;
@@ -9,6 +9,7 @@ interface User {
   lastName: string;
   role: string;
   isVerified: boolean;
+  bio?: string;
 }
 
 interface AuthState {
@@ -36,7 +37,6 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
   switch (action.type) {
     case 'LOGIN_SUCCESS':
       localStorage.setItem('token', action.payload.token);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${action.payload.token}`;
       return {
         ...state,
         user: action.payload.user,
@@ -47,7 +47,6 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
     case 'LOGIN_FAIL':
     case 'LOGOUT':
       localStorage.removeItem('token');
-      delete axios.defaults.headers.common['Authorization'];
       return {
         ...state,
         user: null,
@@ -93,7 +92,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (email: string, password: string) => {
     try {
       dispatch({ type: 'SET_LOADING', payload: true });
-      const response = await axios.post('/api/auth/login', { email, password });
+      const response = await api.post('/api/auth/login', { email, password });
       dispatch({
         type: 'LOGIN_SUCCESS',
         payload: {
@@ -110,7 +109,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const register = async (userData: any) => {
     try {
       dispatch({ type: 'SET_LOADING', payload: true });
-      const response = await axios.post('/api/auth/register', userData);
+      // Remove confirmPassword before sending to server
+      const { confirmPassword, ...registrationData } = userData;
+      const response = await api.post('/api/auth/register', registrationData);
       dispatch({
         type: 'LOGIN_SUCCESS',
         payload: {
@@ -129,7 +130,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const updateUser = (userData: User) => {
-    dispatch({ type: 'UPDATE_USER', payload: userData });
+    const token = localStorage.getItem('token');
+    if (token) {
+      dispatch({
+        type: 'LOGIN_SUCCESS',
+        payload: {
+          user: userData,
+          token: token,
+        },
+      });
+    } else {
+      dispatch({ type: 'UPDATE_USER', payload: userData });
+    }
   };
 
   // Check if user is logged in on app start
@@ -138,8 +150,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const token = localStorage.getItem('token');
       if (token) {
         try {
-          axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-          const response = await axios.get('/api/auth/verify');
+          const response = await api.get('/api/auth/verify');
           dispatch({
             type: 'LOGIN_SUCCESS',
             payload: {

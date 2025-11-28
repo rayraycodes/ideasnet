@@ -3,9 +3,11 @@ import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
 import rateLimit from 'express-rate-limit';
+import session from 'express-session';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import dotenv from 'dotenv';
+import passport from '../config/passport';
 
 // Import routes
 import authRoutes from './routes/auth';
@@ -58,6 +60,22 @@ app.use(limiter);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
+// Session configuration for OAuth
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'your-secret-key-change-in-production',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }
+}));
+
+// Initialize Passport
+app.use(passport.initialize());
+app.use(passport.session());
+
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.status(200).json({ 
@@ -65,6 +83,35 @@ app.get('/health', (req, res) => {
     timestamp: new Date().toISOString(),
     uptime: process.uptime()
   });
+});
+
+// Database connection test endpoint
+app.get('/api/db/test', async (req, res) => {
+  try {
+    // Test connection without disconnecting (Prisma manages connection pool)
+    const result = await prisma.$queryRaw`SELECT 1 as test`;
+    const hasDbUrl = !!process.env.DATABASE_URL;
+    res.status(200).json({ 
+      status: 'connected',
+      database: 'OK',
+      hasDatabaseUrl: hasDbUrl,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error: any) {
+    logger.error('Database connection test failed', {
+      error: error.message,
+      stack: error.stack,
+      code: error.code,
+      hasDatabaseUrl: !!process.env.DATABASE_URL
+    });
+    res.status(500).json({ 
+      status: 'disconnected',
+      error: error.message,
+      code: error.code,
+      hasDatabaseUrl: !!process.env.DATABASE_URL,
+      timestamp: new Date().toISOString()
+    });
+  }
 });
 
 // API Routes

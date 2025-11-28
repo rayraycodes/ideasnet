@@ -2,54 +2,198 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700;800&display=swap');
 
 @layer base {
+  * {
+    @apply antialiased;
+  }
+  
   html {
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+    scroll-behavior: smooth;
   }
   
   body {
     @apply text-gray-900 bg-gray-50;
+    min-height: 100vh;
   }
 }
 
 @layer components {
+  /* Flat Design Buttons */
   .btn-primary {
-    @apply bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+    @apply bg-gray-900 text-white font-medium py-3 px-6 rounded-lg transition-all duration-200;
+    @apply hover:bg-gray-800 active:bg-gray-900;
+    @apply focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2;
   }
   
   .btn-secondary {
-    @apply bg-white hover:bg-gray-50 text-gray-700 font-medium py-2 px-4 rounded-lg border border-gray-300 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+    @apply bg-white text-gray-900 font-medium py-3 px-6 rounded-lg border border-gray-300;
+    @apply hover:bg-gray-50 active:bg-white transition-all duration-200;
+    @apply focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2;
+  }
+  
+  .btn-glass {
+    @apply bg-white/90 backdrop-blur-sm text-gray-900 font-medium py-3 px-6 rounded-lg border border-gray-200;
+    @apply hover:bg-white transition-all duration-200;
+    @apply focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2;
   }
   
   .btn-danger {
-    @apply bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2;
+    @apply bg-red-600 text-white font-medium py-3 px-6 rounded-lg transition-all duration-200;
+    @apply hover:bg-red-700 active:bg-red-600;
+    @apply focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2;
   }
   
+  /* Flat Input Fields */
   .input-field {
-    @apply block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500;
+    @apply block w-full px-4 py-3 bg-white border border-gray-300 rounded-lg;
+    @apply placeholder-gray-400 text-gray-900;
+    @apply focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900;
+    @apply transition-all duration-200;
   }
   
+  /* Flat Cards */
   .card {
     @apply bg-white rounded-lg shadow-sm border border-gray-200 p-6;
+    @apply transition-all duration-200;
   }
   
   .card-hover {
-    @apply bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200;
+    @apply bg-white rounded-lg shadow-sm border border-gray-200 p-6;
+    @apply hover:shadow-md hover:border-gray-300 transition-all duration-200;
+  }
+  
+  .card-glass {
+    @apply bg-white/95 backdrop-blur-sm rounded-lg shadow-sm border border-gray-200 p-6;
+    @apply transition-all duration-200;
+  }
+  
+  .card-glass-hover {
+    @apply bg-white/95 backdrop-blur-sm rounded-lg shadow-sm border border-gray-200 p-6;
+    @apply hover:shadow-md hover:border-gray-300 transition-all duration-200;
+  }
+  
+  /* Flat Container */
+  .glass-container {
+    @apply bg-white rounded-lg shadow-sm border border-gray-200;
+  }
+  
+  /* Navigation */
+  .nav-glass {
+    @apply bg-white/95 backdrop-blur-sm border-b border-gray-200;
+    @apply shadow-sm;
   }
 }
 
 @layer utilities {
   .text-gradient {
-    @apply bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent;
+    @apply text-gray-900;
+  }
+  
+  .text-gradient-blue {
+    @apply text-gray-900;
+  }
+  
+  .glass-effect {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .glass-strong {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(30px) saturate(180%);
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.3);
   }
   
   .animate-fade-in {
-    animation: fadeIn 0.5s ease-in-out;
+    animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   .animate-slide-up {
-    animation: slideUp 0.3s ease-out;
+    animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .animate-scale-in {
+    animation: scaleIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+  
+  @keyframes gradient-shift {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  
+  /* Smooth scrolling */
+  .smooth-scroll {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Hide scrollbar but keep functionality */
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 } 
