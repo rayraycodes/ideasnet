@@ -41,6 +41,10 @@ jobs:
           PUBLIC_URL: /ideasnet
         run: npm run build
 
+      - name: Add .nojekyll file
+        working-directory: ./client/build
+        run: touch .nojekyll
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
